@@ -33,3 +33,5 @@ def get_3d_point(x, y):
     zed.close()
 
     return point3d
+
+print(get_3d_point(1920/2, 1080/2))
