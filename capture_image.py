@@ -8,6 +8,7 @@ def get_image():
 
     # Set configuration parameters
     init_params = sl.InitParameters()
+    init_params.camera_image_flip = sl.FLIP_MODE.OFF
     init_params.camera_resolution = sl.RESOLUTION.HD1080  # Use HD1080 video mode
     init_params.camera_fps = 30  # Set fps at 30
 
@@ -22,7 +23,6 @@ def get_image():
         # A new image is available if grab() returns ERROR_CODE.SUCCESS
 
         image = sl.Mat()
-        runtime_parameters = sl.RuntimeParameters()
 
         key = ''
         while key != 113:  # for 'q' key
@@ -41,3 +41,5 @@ def get_image():
     zed.close()
 
     return image
+
+get_image()
