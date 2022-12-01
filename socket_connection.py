@@ -39,7 +39,7 @@ class SocketConnection:
         print("Listening for UR5e message")
         self.conn, self.addr = self.s.accept()  # Establish connection with client.
         self.TCP = self.conn.recv(1024)  # Recieve information (Tool Center Point)
-        print("Current UR5e Tool Center Point: ", self.TCP)
+        # print("Current UR5e Tool Center Point: ", self.TCP)
 
         return self.TCP
 

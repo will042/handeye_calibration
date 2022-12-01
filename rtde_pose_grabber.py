@@ -59,10 +59,3 @@ con = Controller()
 #%%
 pose = con.get_pose_data()
 
-#%%
-t = np.asarray(pose[0:3])
-R = np.asarray(pose[3:6])
-
-Rmat, *_ = cv2.Rodrigues(R) # ee to base
-
-Rmat2 = np.linalg.inv(Rmat) # base to ee
