@@ -52,10 +52,3 @@ class Controller(object):
         return ee_pose
 
 
-#%%
-# con = Controller()
-
-
-#%%
-# pose = con.get_pose_data()
-

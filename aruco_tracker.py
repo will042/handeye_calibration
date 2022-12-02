@@ -1,11 +1,8 @@
 import numpy as np
-import cv2
 import cv2.aruco as aruco
 import pyzed.sl as sl
 import cv2
 from camera_calibration import calibrate_camera
-from time import sleep
-from rtde_connection import Controller
 
 
 # Create a ZED camera object
@@ -35,16 +32,17 @@ if err != sl.ERROR_CODE.SUCCESS:
 # Grab an image
 runtime_parameters = sl.RuntimeParameters()
 
+
 def get_aruco_pose():
 
+    rvec = np.empty((1, 1, 3))
+    point3d = np.empty((3,))
+
     if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
-        # A new image is available if grab() returns ERROR_CODE.SUCCESS
 
         image = sl.Mat()
         point_cloud = sl.Mat()
 
-        key = ''
-        # while key != 113:  # for 'q' key
         err = zed.grab(runtime_parameters)
         if err == sl.ERROR_CODE.SUCCESS:
             zed.retrieve_image(image, sl.VIEW.LEFT)
@@ -72,60 +70,9 @@ def get_aruco_pose():
                     y_centerPixel = y_sum * .25
 
                     point3d = point_cloud.get_value(x_centerPixel, y_centerPixel)[1][0:3]
-                    # print(point3d)
 
     return rvec, point3d, gray
-            #
-    #     else:
-    #         key = cv2.waitKey(5)
-    # cv2.destroyAllWindows()
-
-key = ''
-
-ur = Controller()
-
-while True:  # for 'q' key
-
-    r_cam_to_aruco, t_cam_to_aruco, *_ = get_aruco_pose()
-    # sleep(.5)
-    # key = cv2.waitKey(5)
-    # cv2.imshow("ZED", gray)
-
-    # print(point3d)
-    # print(np.linalg.inv(cv2.Rodrigues(rvec)[0]))
-    # print(rvec)
-
-    if not np.isnan(np.sum(t_cam_to_aruco)):
-
-        ee_pose = ur.get_pose_data()
-
-        t_base_to_cam = np.asarray(ee_pose[0:3])
-
-        t_base_to_aruco = t_base_to_cam + t_cam_to_aruco
-
-        print(t_base_to_aruco)
-
-        x = t_base_to_aruco[0]
-        y = t_base_to_aruco[1]
-        z = t_base_to_aruco[2]
-        rx = 2.270
-        ry = 2.215
-        rz = 0
-        # ur.rtde_c.moveL([x, y, z, rx, ry, rz], .1, .1)
-        sleep(10)
-
-    # print(ur.rtde_c.getInverseKinematics([x, y, z, rx, ry, rz]))
 
 
-
-    # print(ee_pose)
-
-# cv2.destroyAllWindows()
-
-# zed.close()
-#
-# [[ 0.99649847  0.06141218  0.0567393 ]
-#  [ 0.06354951 -0.99730496 -0.03666447]
-#  [ 0.05433474  0.04014184 -0.99771558]]
-
-# [[[ 3.08066176 -0.04134188 -0.02748224]]]
+def close_zed():
+    zed.close()
